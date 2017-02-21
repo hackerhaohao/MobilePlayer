@@ -2,4 +2,7 @@
     <string name="app_name">MobilePlayer</string>
     <string name="welcome_word">正在启动...</string>
     <string name="rb_video_text">本地视频</string>
+    <string name="rb_audio_text">本地音乐</string>
+    <string name="rb_netvideo_text">网络视频</string>
+    <string name="rb_netaudio_text">网络音乐</string>
 </resources>

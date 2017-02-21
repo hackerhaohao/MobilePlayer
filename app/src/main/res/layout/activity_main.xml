@@ -17,33 +17,34 @@
         android:id="@+id/rg_bottom_tag"
         android:orientation="horizontal"
         android:layout_width="match_parent"
+        android:padding="5dp"
+        android:background="#11000000"
         android:layout_height="wrap_content">
         <RadioButton
             android:id="@+id/rb_video"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:textSize="10sp"
-            android:drawablePadding="3dp"
-            android:background="@drawable/login_icon"
-            android:textColor="@drawable/rb_bottom_textcolor_selector"
-            android:button="@android:color/transparent"
-            android:drawableTop="@drawable/login_icon"
-            android:text="@string/rb_video_text"/>
-
+            android:drawableTop="@drawable/rb_video_drawable_selector"
+            android:text="@string/rb_video_text"
+            style="@style/rb_bottom_tag_style"
+            />
         <RadioButton
             android:id="@+id/rb_audio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_weight="1"
-            android:textSize="10sp"
-            android:drawablePadding="3dp"
-            android:background="@drawable/login_icon"
-            android:textColor="@drawable/rb_bottom_textcolor_selector"
-            android:button="@android:color/transparent"
-            android:drawableTop="@drawable/login_icon"
-            android:text="@string/rb_video_text"/>
+            android:drawableTop="@drawable/rb_audio_drawable_selector"
+            android:text="@string/rb_audio_text"
+            style="@style/rb_bottom_tag_style"
+            />
+        <RadioButton
+            android:id="@+id/rb_netvideo"
+            android:drawableTop="@drawable/netvideo_drawable_selector"
+            android:text="@string/rb_netvideo_text"
+            style="@style/rb_bottom_tag_style"
+            />
+        <RadioButton
+            android:id="@+id/rb_netaudio"
+            android:drawableTop="@drawable/rb_netaudio_drawable_selector"
+            android:text="@string/rb_netaudio_text"
+            style="@style/rb_bottom_tag_style"
+            />
+
+
     </RadioGroup>
 </LinearLayout>

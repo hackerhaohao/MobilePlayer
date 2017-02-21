@@ -8,4 +8,16 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <!--自定义的底部radioButton的样式-->
+    <style name="rb_bottom_tag_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textColor">@drawable/rb_bottom_textcolor_selector</item>
+        <item name="android:drawablePadding">5sp</item>
+        <item name="android:button">@android:color/transparent</item>
+        <item name="android:layout_weight">1</item>
+    </style>
 </resources>
