@@ -7,12 +7,14 @@
     <!--顶部-->
     <!--中部-->
     <FrameLayout
+        android:id="@+id/fl_main_content"
         android:layout_weight="1"
         android:layout_width="match_parent"
         android:layout_height="0dp">
     </FrameLayout>
     <!--底部-->
     <RadioGroup
+        android:id="@+id/rg_bottom_tag"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
