@@ -6,6 +6,8 @@ import android.view.Gravity;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.hackerhaohao.mobileplayer.R;
+
 /**
  * Created by ZhangHao on 2017/2/20.
  */
@@ -14,10 +16,6 @@ public class MainActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        TextView tv = new TextView(this);
-        tv.setText("---主页面---");
-        tv.setGravity(Gravity.CENTER);
-        tv.setTextSize(16);
-        setContentView(tv);
+        setContentView(R.layout.activity_main);
     }
 }
