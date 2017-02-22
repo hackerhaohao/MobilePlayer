@@ -29,7 +29,7 @@ public class AudioPager extends BasePager{
     public View intiView() {
         LogUtil.e("本地音乐页面初始化开始...");
         tv = new TextView(context);
-        tv.setTextSize(12);
+        tv.setTextSize(22);
         tv.setTextColor(Color.RED);
         tv.setGravity(Gravity.CENTER);
         return tv;
