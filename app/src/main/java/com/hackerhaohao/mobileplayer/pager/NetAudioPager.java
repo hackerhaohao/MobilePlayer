@@ -1,7 +1,11 @@
 package com.hackerhaohao.mobileplayer.pager;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.TextClock;
+import android.widget.TextView;
 
 import com.hackerhaohao.mobileplayer.base.BasePager;
 import com.hackerhaohao.mobileplayer.utils.LogUtil;
@@ -11,6 +15,8 @@ import com.hackerhaohao.mobileplayer.utils.LogUtil;
  * 网络音乐页面
  */
 public class NetAudioPager extends BasePager {
+
+    private TextView tv;
 
     public NetAudioPager(Context context) {
         super(context);
@@ -23,7 +29,11 @@ public class NetAudioPager extends BasePager {
     @Override
     public View intiView() {
         LogUtil.e("网络音乐页面初始化开始...");
-        return null;
+        tv = new TextView(context);
+        tv.setTextColor(Color.RED);
+        tv.setTextSize(23);
+        tv.setGravity(Gravity.CENTER);
+        return tv;
     }
 
 
@@ -31,8 +41,9 @@ public class NetAudioPager extends BasePager {
      * 初始化数据
      */
     @Override
-    public void initDate() {
+    public void initData() {
         LogUtil.e("网络音乐数据初始化开始...");
-        super.initDate();
+        tv.setText("网络音乐");
+        super.initData();
     }
 }

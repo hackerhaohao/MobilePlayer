@@ -8,7 +8,9 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!--自定义的底部radioButton的样式-->
+    <!--自定义的底部radioButton的样式 android:button="@android:color/transparent"
+        可以去掉圆圈，但是每次点击radioButton在该radioButton左边会有红色小圈，而该属性值为@null时
+        radiosButton坐标不显示红色小圈-->
     <style name="rb_bottom_tag_style">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -17,7 +19,7 @@
         <item name="android:textSize">12sp</item>
         <item name="android:textColor">@drawable/rb_bottom_textcolor_selector</item>
         <item name="android:drawablePadding">5sp</item>
-        <item name="android:button">@android:color/transparent</item>
+        <item name="android:button">@null</item>
         <item name="android:layout_weight">1</item>
     </style>
 </resources>

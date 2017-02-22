@@ -20,9 +20,30 @@ public abstract class BasePager {
      */
     private View rootView;
 
+    /**
+     * 控制initData方法指挥被调用一次
+     */
+    private boolean isInit;
+
+    public void setIsInit(boolean isInit) {
+        this.isInit = isInit;
+    }
+
+    public boolean isInit() {
+        return isInit;
+    }
+
+    private void setRootView(View rootView) {
+        this.rootView = rootView;
+    }
+
+    public View getRootView() {
+        return rootView;
+    }
+
     public BasePager(Context context){
         this.context = context;
-        rootView = intiView();
+        setRootView(intiView());
     }
 
     /**
@@ -33,6 +54,7 @@ public abstract class BasePager {
 
     /**
      * 子页面初始化数据时候重写该方法
+     * 联网请求，绑定数据
      */
-    public void initDate(){}
+    public void initData(){}
 }

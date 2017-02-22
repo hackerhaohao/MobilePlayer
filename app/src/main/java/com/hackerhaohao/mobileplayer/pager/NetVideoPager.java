@@ -1,7 +1,10 @@
 package com.hackerhaohao.mobileplayer.pager;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.view.Gravity;
 import android.view.View;
+import android.widget.TextView;
 
 import com.hackerhaohao.mobileplayer.base.BasePager;
 import com.hackerhaohao.mobileplayer.utils.LogUtil;
@@ -11,6 +14,8 @@ import com.hackerhaohao.mobileplayer.utils.LogUtil;
  * 网络视频页面
  */
 public class NetVideoPager extends BasePager{
+
+    private TextView tv;
 
     public NetVideoPager(Context context) {
         super(context);
@@ -23,7 +28,11 @@ public class NetVideoPager extends BasePager{
     @Override
     public View intiView() {
         LogUtil.e("网络视频页面初始化开始...");
-        return null;
+        tv = new TextView(context);
+        tv.setGravity(Gravity.CENTER);
+        tv.setTextColor(Color.RED);
+        tv.setTextSize(21);
+        return tv;
     }
 
 
@@ -31,8 +40,9 @@ public class NetVideoPager extends BasePager{
      * 初始化数据
      */
     @Override
-    public void initDate() {
+    public void initData() {
         LogUtil.e("网络视频数据初始化开始...");
-        super.initDate();
+        tv.setText("网络视频");
+        super.initData();
     }
 }
