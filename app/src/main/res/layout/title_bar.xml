@@ -1,13 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.hackerhaohao.mobileplayer.view.TitleBar
-    xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="50dp"
-              android:background="#0000FF">
+<com.hackerhaohao.mobileplayer.view.TitleBar xmlns:android="http://schemas.android.com/apk/res/android"
+      android:orientation="horizontal"
+      android:layout_width="match_parent"
+      android:layout_height="50dp"
+      android:gravity="center_vertical"
+      android:background="#ff3097fd">
 
     <ImageView
-        android:src="@drawable/login_icon"
+        android:id="@+id/iv_logo"
+        android:layout_marginLeft="8dp"
+        android:src="@drawable/ic_topbanner_logo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/title_bar_tv_search"
+        android:background="@drawable/title_bar_tv_search_bg_selector"
+        android:drawableLeft="@drawable/title_bar_tv_search_drawable_selector"
+        android:textColor="@drawable/title_bar_tv_search_color_selector"
+        android:clickable="true"
+        android:drawablePadding="5dp"
+        android:layout_marginLeft="8dp"
+        android:layout_weight="1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:textSize="14sp"
+        android:text="@string/title_bar_tv_text"/>
+
+    <RelativeLayout
+        android:layout_marginLeft="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/title_bar_tv_game"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableLeft="@drawable/ic_topbanner_game"/>
+
+        <ImageView
+            android:id="@+id/title_bar_iv_new_game"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:visibility="gone"
+            android:layout_alignRight="@id/title_bar_tv_game"
+            android:src="@drawable/title_bar_game_got"/>
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/title_bar_iv_record"
+        android:src="@drawable/ic_topbanner_record"
+        android:layout_marginLeft="5dp"
+        android:layout_marginRight="8dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 

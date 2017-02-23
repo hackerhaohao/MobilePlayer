@@ -16,6 +16,8 @@ public class TitleBar extends LinearLayout implements View.OnClickListener{
      */
     private  Context context;
 
+    private  View textView;
+
     public TitleBar(Context context) {
         this(context,null);
     }
@@ -36,6 +38,7 @@ public class TitleBar extends LinearLayout implements View.OnClickListener{
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
+        getChildAt(1);
     }
 
     /**
