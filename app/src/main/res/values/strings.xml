@@ -6,4 +6,5 @@
     <string name="rb_netvideo_text">网络视频</string>
     <string name="rb_netaudio_text">网络音乐</string>
     <string name="title_bar_tv_text">全网搜索</string>
+    <string name="video_pager_text">没有可播放视频...</string>
 </resources>

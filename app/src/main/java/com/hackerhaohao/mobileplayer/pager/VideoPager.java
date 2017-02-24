@@ -4,8 +4,11 @@ import android.content.Context;
 import android.graphics.Color;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.hackerhaohao.mobileplayer.R;
 import com.hackerhaohao.mobileplayer.base.BasePager;
 import com.hackerhaohao.mobileplayer.utils.LogUtil;
 
@@ -15,7 +18,11 @@ import com.hackerhaohao.mobileplayer.utils.LogUtil;
  */
 public class VideoPager extends BasePager{
 
-    private TextView tv;
+    private ListView video_pager_listView;
+
+    private TextView video_pager_tv;
+
+    private ProgressBar video_pager_loading;
 
     public VideoPager(Context context) {
         super(context);
@@ -28,11 +35,12 @@ public class VideoPager extends BasePager{
     @Override
     public View intiView() {
         LogUtil.e("本地视频页面初始化开始...");
-        tv = new TextView(context);
-        tv.setGravity(Gravity.CENTER);
-        tv.setTextSize(12);
-        tv.setTextColor(Color.RED);
-        return tv;
+        //实例化video_pager.xml文件页面
+        View view = View.inflate(context, R.layout.video_pager,null);
+        video_pager_listView = (ListView) view.findViewById(R.id.video_pager_listView);
+        video_pager_tv = (TextView) view.findViewById(R.id.video_pager_tv);
+        video_pager_loading = (ProgressBar) view.findViewById(R.id.video_pager_loading);
+        return view;
     }
 
 
@@ -42,7 +50,6 @@ public class VideoPager extends BasePager{
     @Override
     public void initData() {
         LogUtil.e("本地视频数据初始化开始...");
-        tv.setText("本地视频 ");
         super.initData();
     }
 }
