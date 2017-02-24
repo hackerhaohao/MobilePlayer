@@ -51,5 +51,21 @@ public class VideoPager extends BasePager{
     public void initData() {
         LogUtil.e("本地视频数据初始化开始...");
         super.initData();
+        //获取本地视频数据
+        getDataLocal();
+    }
+
+    /**
+     * 获取本地视频方法
+     *
+     */
+    private void getDataLocal() {
+        new Thread(){
+            @Override
+            public void run() {
+                super.run();
+
+            }
+        }.start();
     }
 }
