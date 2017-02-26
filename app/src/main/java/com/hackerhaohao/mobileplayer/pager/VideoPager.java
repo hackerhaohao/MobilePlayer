@@ -64,7 +64,7 @@ public class VideoPager extends BasePager{
     }
 
     /**
-     * 获取本地视频方法
+     * 获取本地视频方法:在线程中进行文件读取
      * 1、遍历所有文件的后缀名，缺点是文件数目庞大的情况下程序执行速度很慢
      * 2、利用内容提供者，android系统在内存卡安装好之后会发出一条广播，扫描内存文件，将文件信息保存在内容提供者当中
      */
@@ -85,6 +85,8 @@ public class VideoPager extends BasePager{
                         Long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
                     }
                 }
+                //关闭游标
+                cursor.close();
             }
         }.start();
     }
