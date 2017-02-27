@@ -70,7 +70,7 @@ public class VideoPager extends BasePager{
      */
     @Override
     public View intiView() {
-        LogUtil.e("本地视频页面初始化开始...");
+        LogUtil.e("本地视频UI页面初始化开始...");
         //实例化video_pager.xml文件页面
         View view = View.inflate(context, R.layout.video_pager,null);
         video_pager_listView = (ListView) view.findViewById(R.id.video_pager_listView);

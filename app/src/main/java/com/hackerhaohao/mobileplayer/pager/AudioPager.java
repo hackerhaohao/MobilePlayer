@@ -27,7 +27,7 @@ public class AudioPager extends BasePager{
      */
     @Override
     public View intiView() {
-        LogUtil.e("本地音乐页面初始化开始...");
+        LogUtil.e("本地音乐UI页面开始初始化...");
         tv = new TextView(context);
         tv.setTextSize(22);
         tv.setTextColor(Color.RED);

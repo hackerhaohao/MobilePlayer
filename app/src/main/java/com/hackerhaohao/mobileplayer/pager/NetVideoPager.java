@@ -27,7 +27,7 @@ public class NetVideoPager extends BasePager{
      */
     @Override
     public View intiView() {
-        LogUtil.e("网络视频页面初始化开始...");
+        LogUtil.e("网络视频UI页面初始化开始...");
         tv = new TextView(context);
         tv.setGravity(Gravity.CENTER);
         tv.setTextColor(Color.RED);
