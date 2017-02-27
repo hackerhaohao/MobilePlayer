@@ -4,6 +4,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ListView;
@@ -11,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.hackerhaohao.mobileplayer.R;
+import com.hackerhaohao.mobileplayer.adapter.VideoAdapter;
 import com.hackerhaohao.mobileplayer.base.BasePager;
 import com.hackerhaohao.mobileplayer.po.MediaItem;
 import com.hackerhaohao.mobileplayer.utils.LogUtil;
@@ -30,7 +33,32 @@ public class VideoPager extends BasePager{
 
     private ProgressBar video_pager_loading;
 
+    /**
+     * 数据集合
+     */
     private List<MediaItem> mediaList;
+
+    private Handler handler = new Handler() {
+        /**
+         * 子类必须重写该方法，处理相关消息更新UI
+         * @param msg
+         */
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (mediaList != null && mediaList.size() > 0){
+                //有数据，不显示文本，设置适配器
+                video_pager_tv.setVisibility(View.GONE);
+                VideoAdapter adapter = new VideoAdapter(mediaList,context);
+                video_pager_listView.setAdapter(adapter);
+            } else {
+                //无数据,显示文本
+                video_pager_tv.setVisibility(View.VISIBLE);
+            }
+            //ProgressBar不显示
+            video_pager_loading.setVisibility(View.GONE);
+        }
+    };
 
     public VideoPager(Context context) {
         super(context);
@@ -66,13 +94,14 @@ public class VideoPager extends BasePager{
     /**
      * 获取本地视频方法:在线程中进行文件读取
      * 1、遍历所有文件的后缀名，缺点是文件数目庞大的情况下程序执行速度很慢
-     * 2、利用内容提供者，android系统在内存卡安装好之后会发出一条广播，扫描内存文件，将文件信息保存在内容提供者当中
+     * 逻辑：在子线程中通过ContentProvide加载SD卡的视频信息放入集合中，利用Handler在线程中传递消息改变UI
      */
     private void getDataLocal() {
         new Thread(){
             @Override
             public void run() {
                 super.run();
+                //内容解析器
                 ContentResolver contentResolver = context.getContentResolver();
                 Uri uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
                 Cursor cursor =  contentResolver.query(uri, null, null, null,null);
@@ -81,12 +110,25 @@ public class VideoPager extends BasePager{
                     while (cursor.moveToNext()){
                         MediaItem mediaItem = new MediaItem();
                         mediaList.add(mediaItem);
-                        String name = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME));
-                        Long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
+                        String displayName = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DISPLAY_NAME));
+                        mediaItem.setDisplayName(displayName);
+                        long duration = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.DURATION));
+                        mediaItem.setDuration(duration);
+                        long size = cursor.getLong(cursor.getColumnIndex(MediaStore.Video.Media.SIZE));
+                        mediaItem.setSize(size);
+                        String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.ARTIST));
+                        mediaItem.setArtist(artist);
+                        //视频播放地址
+                        String data = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.DATA));
+                        mediaItem.setData(data);
+                        String title = cursor.getString(cursor.getColumnIndex(MediaStore.Video.Media.TITLE));
+                        mediaItem.setTitle(title);
                     }
+                    //关闭游标
+                    cursor.close();
                 }
-                //关闭游标
-                cursor.close();
+                //传递消息
+                handler.sendEmptyMessage(0);
             }
         }.start();
     }
