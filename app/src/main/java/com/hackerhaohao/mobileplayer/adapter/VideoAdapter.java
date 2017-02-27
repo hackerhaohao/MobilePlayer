@@ -1,12 +1,17 @@
 package com.hackerhaohao.mobileplayer.adapter;
 
 import android.content.Context;
+import android.text.format.Formatter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.hackerhaohao.mobileplayer.R;
 import com.hackerhaohao.mobileplayer.po.MediaItem;
+import com.hackerhaohao.mobileplayer.utils.Utils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +28,13 @@ public class VideoAdapter extends BaseAdapter{
 
     private  LayoutInflater layoutInflater;
 
+    private Utils utils;
+
     public VideoAdapter(List<MediaItem> mediaList, Context context) {
         this.list = mediaList;
         this.context = context;
         this.layoutInflater = LayoutInflater.from(this.context);
+        utils = new Utils();
     }
 
     /**
@@ -83,14 +91,35 @@ public class VideoAdapter extends BaseAdapter{
      * @param parent      The parent that this view will eventually be attached to
      * @return A View corresponding to the data at the specified position.
      */
+
+    /**
+     * 思路：判断convertView是否是null,若是null在通过ViewHolder实例化布局文件，放入tag，若不是null则从tag拿到viewHolder
+     *      然后根据position赋值，最后返回convertView
+     * @param position
+     * @param convertView
+     * @param parent
+     * @return
+     */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder = null;
+        ViewHolder viewHolder ;
         if(null == convertView){
             viewHolder = new ViewHolder();
+            convertView = layoutInflater.inflate(R.layout.video_pager_list_item, null);
+            viewHolder.video_pager_list_item_tv_disPlayName = (TextView) convertView.findViewById(R.id.video_pager_list_item_tv_disPlayName);
+            viewHolder.video_pager_list_item_tv_duRation = (TextView) convertView.findViewById(R.id.video_pager_list_item_tv_duRation);
+            viewHolder.video_pager_list_item_tv_size = (TextView) convertView.findViewById(R.id.video_pager_list_item_tv_size);
+            //放入到TAG
+            convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
+        //根据position来取出list中数据赋值
+        MediaItem mediaItem = list.get(position);
+        viewHolder.video_pager_list_item_tv_disPlayName.setText(mediaItem.getDisplayName());
+        viewHolder.video_pager_list_item_tv_duRation.setText(utils.stringForTime(mediaItem.getDuration()));
+        //使用AndroidAPI自带的文件大小格式化方法
+        viewHolder.video_pager_list_item_tv_size.setText(Formatter.formatFileSize(this.context,mediaItem.getSize()));
         return convertView;
     }
 
@@ -98,6 +127,8 @@ public class VideoAdapter extends BaseAdapter{
      * 内部类优化适配器速度
      */
     static  class  ViewHolder{
-
+        TextView video_pager_list_item_tv_disPlayName;
+        TextView video_pager_list_item_tv_duRation;
+        TextView video_pager_list_item_tv_size;
     }
 }
