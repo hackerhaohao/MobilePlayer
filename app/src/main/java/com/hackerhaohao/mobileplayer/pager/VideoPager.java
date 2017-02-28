@@ -2,15 +2,18 @@ package com.hackerhaohao.mobileplayer.pager;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.hackerhaohao.mobileplayer.R;
 import com.hackerhaohao.mobileplayer.adapter.VideoAdapter;
@@ -76,6 +79,8 @@ public class VideoPager extends BasePager{
         video_pager_listView = (ListView) view.findViewById(R.id.video_pager_listView);
         video_pager_tv = (TextView) view.findViewById(R.id.video_pager_tv);
         video_pager_loading = (ProgressBar) view.findViewById(R.id.video_pager_loading);
+        //设置list项的监听
+        video_pager_listView.setOnItemClickListener(new MyOnItemClickListener());
         return view;
     }
 
@@ -131,5 +136,34 @@ public class VideoPager extends BasePager{
                 handler.sendEmptyMessage(0);
             }
         }.start();
+    }
+
+    //list监听器
+    class  MyOnItemClickListener implements AdapterView.OnItemClickListener{
+
+        /**
+         * Callback method to be invoked when an item in this AdapterView has
+         * been clicked.
+         * <p/>
+         * Implementers can call getItemAtPosition(position) if they need
+         * to access the data associated with the selected item.
+         *
+         * @param parent   The AdapterView where the click happened.
+         * @param view     The view within the AdapterView that was clicked (this
+         *                 will be a view provided by the adapter)
+         * @param position The position of the view in the adapter.
+         * @param id       The row id of the item that was clicked.
+         */
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            //是否需要判断集合为空？
+            if (mediaList != null && mediaList.size() > 0){
+                MediaItem mediaItem = mediaList.get(position);
+                Toast.makeText(context,mediaItem.toString(),Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent();
+                intent.setDataAndType(Uri.parse(mediaItem.getData()),"vedio/*");
+                context.startActivity(intent);
+            }
+        }
     }
 }
