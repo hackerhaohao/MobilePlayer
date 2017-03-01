@@ -16,6 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.hackerhaohao.mobileplayer.R;
+import com.hackerhaohao.mobileplayer.activity.VideoPlayerActivity;
 import com.hackerhaohao.mobileplayer.adapter.VideoAdapter;
 import com.hackerhaohao.mobileplayer.base.BasePager;
 import com.hackerhaohao.mobileplayer.po.MediaItem;
@@ -160,8 +161,9 @@ public class VideoPager extends BasePager{
             if (mediaList != null && mediaList.size() > 0){
                 MediaItem mediaItem = mediaList.get(position);
                 Toast.makeText(context,mediaItem.toString(),Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent();
-                intent.setDataAndType(Uri.parse(mediaItem.getData()),"vedio/*");
+                Intent intent = new Intent(context,VideoPlayerActivity.class);
+//                intent.setDataAndType(Uri.parse(mediaItem.getData()),"vedio/*");
+                intent.setData(Uri.parse(mediaItem.getData()));
                 context.startActivity(intent);
             }
         }
