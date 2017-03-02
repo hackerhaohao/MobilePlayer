@@ -22,7 +22,7 @@ public class VideoPlayerActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        setContentView(R.layout.activity_videoplayer);
+        setContentView(R.layout.activity_video_player);
         video_player_vv = (VideoView) findViewById(R.id.video_player_vv);
         //得到播放地址
         Uri uri = getIntent().getData();
