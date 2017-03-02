@@ -18,8 +18,12 @@
             </intent-filter>
         </activity>
 
-        <!-- 单例模式的activity-->
-        <activity android:name=".activity.MainActivity" android:launchMode="singleTask"/>
+        <!--
+        单例模式的activity：launchMode="singleTask"只会在Activity栈中创建一次Activity
+        加上 android:configChanges之后横竖屏切换不会重新创建Activity,执行Activity生命周期
+        -->
+        <activity android:name=".activity.MainActivity" android:launchMode="singleTask"
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"/>
 
         <activity android:name=".activity.VideoPlayerActivity"/>
     </application>
