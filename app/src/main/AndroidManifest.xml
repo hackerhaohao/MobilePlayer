@@ -19,13 +19,22 @@
         </activity>
 
         <!--
-        单例模式的activity：launchMode="singleTask"只会在Activity栈中创建一次Activity
-        加上 android:configChanges之后横竖屏切换不会重新创建Activity,执行Activity生命周期
+        1、单例模式的activity：launchMode="singleTask"只会在Activity栈中创建一次Activity
+        2、加上 android:configChanges之后横竖屏切换不会重新创建Activity,执行Activity生命周期
+        3、通过设置android:theme="@android:style/***Fullscreen"隐藏掉手机默认顶部栏，从而
+           通过改变theme的值改变Activity显示样式
         -->
         <activity android:name=".activity.MainActivity" android:launchMode="singleTask"
-            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"/>
+            android:configChanges="keyboardHidden|orientation|screenLayout|screenSize"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"/>
 
-        <activity android:name=".activity.VideoPlayerActivity"/>
+        <!--
+        1、通过设置android:screenOrientation来控制启动Activity是横屏还是竖屏landscape横向，portrait竖屏
+        -->
+        <activity android:name=".activity.VideoPlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
+            android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+            android:screenOrientation="landscape"/>
     </application>
 
 </manifest>

@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.Window;
+import android.view.WindowManager;
 
 import com.hackerhaohao.mobileplayer.R;
 
@@ -23,7 +24,10 @@ public class SplashActivity extends Activity {
         super.onCreate(savedInstanceState);
         //隐藏标题一定要写在setContentView方法之前否则会报错
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        //设置页面全屏显示的代码写法，另一种通过注册Activity时候改变theme在功能清单中有体现
+        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setContentView(R.layout.activity_splash);
+
         //3秒后执行run方法,这个方法执行是在主线程中
         handler.postDelayed(new Runnable() {
             @Override
