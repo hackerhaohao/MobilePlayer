@@ -29,8 +29,8 @@ public class VideoPlayerActivity extends Activity{
         video_player_vv.setVideoURI(uri);
         //设置监听
         video_player_vv.setOnPreparedListener(new MyOnPreparedListener());
-        //设置播放控制bar
-        video_player_vv.setMediaController(new MediaController(this));
+        //设置Android系统提供的播放控制bar
+        //video_player_vv.setMediaController(new MediaController(this));
     }
 
     class MyOnPreparedListener implements MediaPlayer.OnPreparedListener {
