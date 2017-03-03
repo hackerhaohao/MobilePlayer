@@ -148,7 +148,6 @@ public class VideoPager extends BasePager{
          * <p/>
          * Implementers can call getItemAtPosition(position) if they need
          * to access the data associated with the selected item.
-         *
          * @param parent   The AdapterView where the click happened.
          * @param view     The view within the AdapterView that was clicked (this
          *                 will be a view provided by the adapter)

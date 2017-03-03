@@ -3,27 +3,63 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
     <LinearLayout
-        android:background="@drawable/login_icon"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
+        android:id="@+id/vp_controller_top"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/video_player_name"
-            android:text="视频名称"
-            android:textSize="14sp"
-            android:textColor="#ffffff"
-            android:layout_weight="1"
+        <LinearLayout
+            android:id="@+id/vp_controller_top_status"
+            android:background="@drawable/bg_player_status"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-        <ImageView
-            android:src="@drawable/login_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="16dp">
+            <TextView
+                android:id="@+id/vp_controller_video_name"
+                android:text="视频名称"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:layout_marginLeft="8dp"
+                android:layout_weight="1"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"/>
+            <ImageView
+                android:id="@+id/vp_controller_video_battery"
+                android:layout_marginRight="8dp"
+                android:layout_marginLeft="8dp"
+                android:src="@drawable/ic_battery_80"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/vp_controller_video_system_time"
+                android:text="17:05"
+                android:textSize="14sp"
+                android:textColor="#ffffff"
+                android:layout_marginLeft="8dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
 
-        <TextView
-            android:text="15:17"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:id="@+id/bg_player_control"
+            android:background="@drawable/bg_player_top_control"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <Button
+                android:text="ddd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <SeekBar
+                android:layout_weight="1"
+                android:minHeight="5dp"
+                android:maxHeight="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
     </LinearLayout>
+
+
 </RelativeLayout>
