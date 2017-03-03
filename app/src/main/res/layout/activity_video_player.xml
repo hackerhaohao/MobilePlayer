@@ -5,8 +5,10 @@
                 android:gravity="center">
     <VideoView
         android:id="@+id/video_player_vv"
+        android:layout_centerInParent="true"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
     <!--播放控制-->
     <include layout="@layout/video_player_controller"/>
+
 </RelativeLayout>
