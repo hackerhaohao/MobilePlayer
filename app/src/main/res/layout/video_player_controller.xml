@@ -75,12 +75,13 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/vp_controller_bottom"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:background="@drawable/bg_player_bottom_control"
+            android:background="@drawable/bg_player_bottom_seekbar"
             android:gravity="center_vertical"
             android:orientation="horizontal"
             android:layout_width="match_parent"
@@ -123,27 +124,39 @@
                 android:id="@+id/vp_controller_video_exit"
                 android:background="@drawable/vp_controller_video_exit_selector"
                 android:gravity="center"
+                android:layout_marginRight="10dp"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"/>
             <Button
-                android:background="@drawable/vp_controller_video_exit_selector"
+                android:id="@+id/vp_controller_video_pre"
+                android:background="@drawable/vp_controller_video_pre_selector"
                 android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"/>
             <Button
-                android:background="@drawable/vp_controller_video_exit_selector"
+                android:id="@+id/vp_controller_video_play_pause"
+                android:background="@drawable/vp_controller_video_play_pause_selector"
                 android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"/>
             <Button
-                android:background="@drawable/vp_controller_video_exit_selector"
+                android:id="@+id/vp_controller_video_next"
+                android:background="@drawable/vp_controller_video_next_selector"
                 android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"/>
             <Button
                 android:id="@+id/vp_controller_video_fullScreen"
-                android:background="@drawable/btn_default_screen_selector"
+                android:background="@drawable/vp_controller_video_full_screen_selector"
                 android:gravity="center"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
