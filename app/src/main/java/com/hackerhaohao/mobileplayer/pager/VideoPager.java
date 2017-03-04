@@ -159,7 +159,7 @@ public class VideoPager extends BasePager{
             //是否需要判断集合为空？
             if (mediaList != null && mediaList.size() > 0){
                 MediaItem mediaItem = mediaList.get(position);
-                Toast.makeText(context,mediaItem.toString(),Toast.LENGTH_SHORT).show();
+//                Toast.makeText(context,mediaItem.toString(),Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(context,VideoPlayerActivity.class);
 //                intent.setDataAndType(Uri.parse(mediaItem.getData()),"vedio/*");
                 intent.setData(Uri.parse(mediaItem.getData()));

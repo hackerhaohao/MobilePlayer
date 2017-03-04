@@ -33,10 +33,11 @@
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/vp_controller_video_system_time"
+                android:gravity="center_vertical"
                 android:text="17:05"
                 android:textSize="14sp"
                 android:textColor="#ffffff"
-                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -49,17 +50,102 @@
             android:layout_width="match_parent"
             android:layout_height="30dp">
             <Button
-                android:text="ddd"
-                android:layout_width="wrap_content"
+                android:id="@+id/vp_controller_video_voice"
+                android:background="@drawable/vp_controller_video_voice_selector"
+                android:gravity="center"
+                android:layout_width="60dp"
                 android:layout_height="wrap_content"/>
             <SeekBar
+                android:id="@+id/vp_controller_vioice_seekbar"
+                android:progress="30"
+                android:thumb="@drawable/progress_thumb"
+                android:progressDrawable="@drawable/progress_horizontal"
                 android:layout_weight="1"
                 android:minHeight="5dp"
                 android:maxHeight="5dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/vp_controller_video_switch"
+                android:background="@drawable/vp_controller_video_switch_selector"
+                android:gravity="center"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
     </LinearLayout>
 
-
+    <LinearLayout
+        android:layout_alignParentBottom="true"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:background="@drawable/bg_player_bottom_control"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="20dp">
+            <TextView
+                android:id="@+id/vp_controller_video_currentDuration"
+                android:text="12:12"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"/>
+            <SeekBar
+                android:id="@+id/vp_controller_video_seekBar"
+                android:progress="30"
+                android:thumb="@drawable/progress_thumb"
+                android:progressDrawable="@drawable/progress_horizontal"
+                android:layout_weight="1"
+                android:minHeight="5dp"
+                android:maxHeight="5dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/vp_controller_video_duration"
+                android:text="20:12"
+                android:textColor="#ffffff"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/bg_player_control_bottom"
+            android:background="@drawable/bg_player_bottom_control"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="30dp">
+            <Button
+                android:id="@+id/vp_controller_video_exit"
+                android:background="@drawable/vp_controller_video_exit_selector"
+                android:gravity="center"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:background="@drawable/vp_controller_video_exit_selector"
+                android:gravity="center"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:background="@drawable/vp_controller_video_exit_selector"
+                android:gravity="center"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:background="@drawable/vp_controller_video_exit_selector"
+                android:gravity="center"
+                android:layout_width="60dp"
+                android:layout_height="wrap_content"/>
+            <Button
+                android:id="@+id/vp_controller_video_fullScreen"
+                android:background="@drawable/btn_default_screen_selector"
+                android:gravity="center"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>
