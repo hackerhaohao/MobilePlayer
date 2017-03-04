@@ -56,10 +56,8 @@
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"/>
             <SeekBar
-                android:id="@+id/vp_controller_vioice_seekbar"
-                android:progress="30"
+                android:id="@+id/vp_controller_voice_seekBar"
                 android:thumb="@drawable/progress_thumb"
-                android:progressDrawable="@drawable/progress_horizontal"
                 android:layout_weight="1"
                 android:minHeight="5dp"
                 android:maxHeight="5dp"
@@ -92,13 +90,12 @@
                 android:textColor="#ffffff"
                 android:textSize="14sp"
                 android:gravity="center"
+                android:layout_marginLeft="8dp"
                 android:layout_width="60dp"
                 android:layout_height="wrap_content"/>
             <SeekBar
                 android:id="@+id/vp_controller_video_seekBar"
-                android:progress="30"
-                android:thumb="@drawable/progress_thumb"
-                android:progressDrawable="@drawable/progress_horizontal"
+                android:thumb="@drawable/seekbar"
                 android:layout_weight="1"
                 android:minHeight="5dp"
                 android:maxHeight="5dp"
@@ -110,6 +107,7 @@
                 android:textColor="#ffffff"
                 android:textSize="14sp"
                 android:gravity="center"
+                android:layout_marginRight="8dp"
                 android:layout_width="40dp"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -141,7 +139,7 @@
                 android:gravity="center"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
-                android:layout_width="60dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"/>
             <Button
                 android:id="@+id/vp_controller_video_next"
