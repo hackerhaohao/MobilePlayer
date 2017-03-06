@@ -169,7 +169,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
 
         /**
          *在seekbar拖动的时候回调方法
-         * 如果fromUser 是true则说明seekbar的移动是人为的否则是控件自动移动
+         * 如果fromUser 是true则说明seekbar的移动是人为的否则是控件自动移动；当控件自动更新移动时候该方法也会被回调
          */
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
