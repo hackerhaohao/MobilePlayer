@@ -1,10 +1,12 @@
 package com.hackerhaohao.mobileplayer.po;
 
+import java.io.Serializable;
+
 /**
  * Created by ZhangHao on 2017/2/26.
  * 多媒体的实体类
  */
-public class MediaItem {
+public class MediaItem implements Serializable{
 
     /**
      * 多媒体名称

@@ -12,15 +12,16 @@
             android:id="@+id/vp_controller_top_status"
             android:background="@drawable/bg_player_status"
             android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="16dp">
+            android:gravity="center_vertical"
+            android:layout_height="20dp">
             <TextView
                 android:id="@+id/vp_controller_video_name"
                 android:text="视频名称"
                 android:textSize="14sp"
                 android:textColor="#ffffff"
                 android:layout_marginLeft="8dp"
+                android:gravity="center_vertical"
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"/>
@@ -33,7 +34,7 @@
                 android:layout_height="wrap_content"/>
             <TextView
                 android:id="@+id/vp_controller_video_system_time"
-                android:gravity="center_vertical"
+                android:gravity="center"
                 android:text="17:05"
                 android:textSize="14sp"
                 android:textColor="#ffffff"
@@ -95,7 +96,7 @@
                 android:layout_height="wrap_content"/>
             <SeekBar
                 android:id="@+id/vp_controller_video_seekBar"
-                android:thumb="@drawable/seekbar"
+                android:thumb="@drawable/progress_thumb"
                 android:layout_weight="1"
                 android:minHeight="5dp"
                 android:maxHeight="5dp"

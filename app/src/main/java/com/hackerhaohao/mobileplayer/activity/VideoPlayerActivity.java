@@ -1,6 +1,10 @@
 package com.hackerhaohao.mobileplayer.activity;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,10 +17,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.hackerhaohao.mobileplayer.R;
+import com.hackerhaohao.mobileplayer.utils.LogUtil;
 import com.hackerhaohao.mobileplayer.utils.Utils;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 
 /**
@@ -46,6 +55,8 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     private Button vpControllerVideoPlayPause;
     private Button vpControllerVideoNext;
     private Button vpControllerVideoFullScreen;
+
+    private MyBatteryReceive myBatteryReceive;
 
     private static final int PROGRESS = 0;
     /**
@@ -108,7 +119,8 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
                 }
                 break;
             case  R.id.vp_controller_video_next:
-            break;case  R.id.vp_controller_video_fullScreen:
+            break;
+            case  R.id.vp_controller_video_fullScreen:
             break;
             default:
             break;
@@ -125,6 +137,8 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
                     vpControllerVideoCurrentDuration.setText(new Utils().stringForTime(video_player_vv.getCurrentPosition()));
                     //根据视频播放位置设置seekBar的当前进度
                     vpControllerVideoSeekBar.setProgress(video_player_vv.getCurrentPosition());
+                    //显示系统时间
+                    vpControllerVideoSystemTime.setText(getSystemTime());
                     //每一秒钟更新一次，先移除消息，再发送消息
                     handler.removeMessages(PROGRESS);
                     handler.sendEmptyMessageDelayed(PROGRESS,1000);
@@ -132,6 +146,11 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             }
         }
     };
+
+    private String getSystemTime() {
+        SimpleDateFormat s = new SimpleDateFormat("HH:mm:ss");
+        return s.format(new Date());
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -145,6 +164,42 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         setListener();
         //设置Android系统提供的播放控制bar
         //video_player_vv.setMediaController(new MediaController(this));
+
+        //通过广播的方式设置电池电量的图片,动态注册的方式，因为电量变化、锁屏等功能的广播静态注册之后之后是收不到的。
+        myBatteryReceive = new MyBatteryReceive();
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
+        registerReceiver(myBatteryReceive, intentFilter);
+    }
+
+    private class MyBatteryReceive extends BroadcastReceiver{
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            //电量的值0-100
+            int level = intent.getIntExtra("level",0);
+            LogUtil.e(level+"电量值");
+            setBatteryPicture(level);
+        }
+
+    }
+
+    //根据系统电量设置图片
+    private void setBatteryPicture(int level) {
+        if(level <= 0){
+            vpControllerVideoBattery.setImageResource(R.drawable.ic_battery_0);
+        }else if(level <= 10){
+            vpControllerVideoBattery.setImageResource(R.drawable.ic_battery_10);
+        }else if(level <= 20){
+            vpControllerVideoBattery.setImageResource(R.drawable.ic_battery_20);
+        }else if(level <= 40){
+            vpControllerVideoBattery.setImageResource(R.drawable.ic_battery_40);
+        }else if(level <= 60){
+            vpControllerVideoBattery.setImageResource(R.drawable.ic_battery_60);
+        }else if(level <= 80){
+            vpControllerVideoBattery.setImageResource(R.drawable.ic_battery_80);
+        }else {
+            vpControllerVideoBattery.setImageResource(R.drawable.ic_battery_100);
+        }
     }
 
     private void setListener() {
@@ -165,7 +220,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         vpControllerVideoSeekBar.setOnSeekBarChangeListener(new VideoOnSeekBarChangeListener());
     }
 
-    class VideoOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
+    private class VideoOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
 
         /**
          *在seekbar拖动的时候回调方法
@@ -189,7 +244,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         }
     }
 
-    class MyOnPreparedListener implements MediaPlayer.OnPreparedListener {
+    private class MyOnPreparedListener implements MediaPlayer.OnPreparedListener {
 
         /**
          * Called when the media file is ready for playback.
@@ -208,7 +263,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         }
     }
 
-    class MyOnCompletionListener implements MediaPlayer.OnCompletionListener{
+    private class MyOnCompletionListener implements MediaPlayer.OnCompletionListener{
 
         /**
          * Called when the end of a media source is reached during playback.
@@ -220,10 +275,18 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         }
     }
 
-    class MyOnErrorListener implements MediaPlayer.OnErrorListener{
+    private class MyOnErrorListener implements MediaPlayer.OnErrorListener{
         @Override
         public boolean onError(MediaPlayer mp, int what, int extra) {
             return false;
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        //在Activity中初始化资源的时候先初始化父类的资源，因为在子类中可能使用父类资源；但是在释放资源的时候先释放子类资源
+        //防止父类资源在其它地方被使用出现空指针异常。释放时候子类释放代码写在super关键字之前，初始化的时候反之
+        unregisterReceiver(myBatteryReceive);
+        super.onDestroy();
     }
 }

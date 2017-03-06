@@ -35,6 +35,7 @@
         <activity android:name=".activity.VideoPlayerActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|screenLayout"
             android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen"
+            android:screenOrientation="landscape"
             />
     </application>
 
