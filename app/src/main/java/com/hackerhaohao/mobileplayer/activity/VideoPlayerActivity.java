@@ -286,7 +286,9 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     protected void onDestroy() {
         //在Activity中初始化资源的时候先初始化父类的资源，因为在子类中可能使用父类资源；但是在释放资源的时候先释放子类资源
         //防止父类资源在其它地方被使用出现空指针异常。释放时候子类释放代码写在super关键字之前，初始化的时候反之
-        unregisterReceiver(myBatteryReceive);
+        if(null != myBatteryReceive){
+            unregisterReceiver(myBatteryReceive);
+        }
         super.onDestroy();
     }
 }
