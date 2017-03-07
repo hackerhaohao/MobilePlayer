@@ -159,11 +159,18 @@ public class VideoPager extends BasePager{
             //是否需要判断集合为空？
             if (mediaList != null && mediaList.size() > 0){
                 MediaItem mediaItem = mediaList.get(position);
-//                Toast.makeText(context,mediaItem.toString(),Toast.LENGTH_SHORT).show();
+                /*
+                Toast.makeText(context,mediaItem.toString(),Toast.LENGTH_SHORT).show();
+                1、使用隐式意图，调起系统所有播放器
+                Intent intent = new Intent();
+                intent.setDataAndType(Uri.parse(mediaItem.getData()),"vedio*//*");
+                */
+                /*
+                2、调用自己的播放器，但是只传递一个播放地址
                 Intent intent = new Intent(context,VideoPlayerActivity.class);
-//                intent.setDataAndType(Uri.parse(mediaItem.getData()),"vedio/*");
                 intent.setData(Uri.parse(mediaItem.getData()));
                 context.startActivity(intent);
+                */
             }
         }
     }
