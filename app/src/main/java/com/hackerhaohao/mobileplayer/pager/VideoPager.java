@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
@@ -22,6 +23,7 @@ import com.hackerhaohao.mobileplayer.base.BasePager;
 import com.hackerhaohao.mobileplayer.po.MediaItem;
 import com.hackerhaohao.mobileplayer.utils.LogUtil;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -171,6 +173,15 @@ public class VideoPager extends BasePager{
                 intent.setData(Uri.parse(mediaItem.getData()));
                 context.startActivity(intent);
                 */
+                /*
+                * 传列表，传递对象数据列表需要序列化
+                */
+                Intent intent = new Intent(context,VideoPlayerActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putSerializable("mediaList", (Serializable) mediaList);
+                intent.putExtra("position",position);
+                intent.putExtras(bundle);
+                context.startActivity(intent);
             }
         }
     }

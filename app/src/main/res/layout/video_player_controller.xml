@@ -18,7 +18,7 @@
             <TextView
                 android:id="@+id/vp_controller_video_name"
                 android:text="视频名称"
-                android:textSize="14sp"
+                android:textSize="13sp"
                 android:textColor="#ffffff"
                 android:layout_marginLeft="8dp"
                 android:gravity="center_vertical"

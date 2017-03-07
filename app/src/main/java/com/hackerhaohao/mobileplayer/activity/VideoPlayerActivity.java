@@ -21,10 +21,12 @@ import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.hackerhaohao.mobileplayer.R;
+import com.hackerhaohao.mobileplayer.po.MediaItem;
 import com.hackerhaohao.mobileplayer.utils.LogUtil;
 import com.hackerhaohao.mobileplayer.utils.Utils;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 
@@ -59,6 +61,19 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     private MyBatteryReceive myBatteryReceive;
 
     private static final int PROGRESS = 0;
+    /**
+     * 传递的播放列表
+     */
+    private ArrayList<MediaItem> mediaList;
+    /**
+     * 播放位置
+     */
+    private int position;
+    /**
+     * 播放路径
+     */
+    private Uri uri;
+
     /**
      * Find the Views in the layout<br />
      * <br />
@@ -106,6 +121,16 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             case  R.id.vp_controller_video_exit:
             break;
             case  R.id.vp_controller_video_pre:
+                if (null != mediaList && mediaList.size() > 0){
+                    if (position > 0){
+                        position =-1;
+                    }else{
+                        position = mediaList.size()-1;
+                    }
+                    MediaItem mediaItem = mediaList.get(position);
+                    video_player_vv.setVideoPath(mediaItem.getData());
+                    vpControllerVideoName.setText(mediaItem.getDisplayName());
+                }
             break;
             //播放按钮被点击
             case  R.id.vp_controller_video_play_pause:
@@ -158,18 +183,42 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         //初始化页面控件
         findViews();
-        //得到播放地址
-        Uri uri = getIntent().getData();
-        video_player_vv.setVideoURI(uri);
+        setData();
         setListener();
         //设置Android系统提供的播放控制bar
         //video_player_vv.setMediaController(new MediaController(this));
+        setBroadCastReceive();
+    }
 
+    /**
+     * 设置监控电量的广播
+     */
+    private void setBroadCastReceive() {
         //通过广播的方式设置电池电量的图片,动态注册的方式，因为电量变化、锁屏等功能的广播静态注册之后之后是收不到的。
         myBatteryReceive = new MyBatteryReceive();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(Intent.ACTION_BATTERY_CHANGED);
         registerReceiver(myBatteryReceive, intentFilter);
+    }
+
+    /**
+     * 设置播放数据
+     */
+    private void setData() {
+        //得到播放地址
+        uri = getIntent().getData();
+        mediaList = (ArrayList<MediaItem>) getIntent().getSerializableExtra("mediaList");
+        position = getIntent().getIntExtra("position",0);
+        if (null != mediaList && mediaList.size() > 0){
+            MediaItem mediaItem = mediaList.get(position);
+            vpControllerVideoName.setText(mediaItem.getDisplayName());
+            video_player_vv.setVideoPath(mediaItem.getData());
+        }else if(null != uri){
+            video_player_vv.setVideoURI(uri);
+            video_player_vv.setVideoPath(uri.toString());
+        } else {
+            Toast.makeText(this, "哎吆！无数据...", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private class MyBatteryReceive extends BroadcastReceiver{
