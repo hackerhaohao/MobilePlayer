@@ -214,6 +214,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             vpControllerVideoName.setText(mediaItem.getDisplayName());
             video_player_vv.setVideoPath(mediaItem.getData());
         }else if(null != uri){
+            //播放器响应第三方调用的时
             video_player_vv.setVideoURI(uri);
             video_player_vv.setVideoPath(uri.toString());
         } else {
