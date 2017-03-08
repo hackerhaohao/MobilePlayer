@@ -126,7 +126,7 @@ public class VideoAdapter extends BaseAdapter{
     /**
      * 内部类优化适配器速度
      */
-    static  class  ViewHolder{
+    public static final class  ViewHolder{
         TextView video_pager_list_item_tv_disPlayName;
         TextView video_pager_list_item_tv_duRation;
         TextView video_pager_list_item_tv_size;
