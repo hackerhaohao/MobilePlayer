@@ -119,11 +119,12 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             case  R.id.vp_controller_video_switch:
             break;
             case  R.id.vp_controller_video_exit:
+                finish();
             break;
             case  R.id.vp_controller_video_pre:
                 if (null != mediaList && mediaList.size() > 0){
                     if (position > 0){
-                        position =-1;
+                        position--;
                     }else{
                         position = mediaList.size()-1;
                     }
@@ -144,6 +145,16 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
                 }
                 break;
             case  R.id.vp_controller_video_next:
+                if (null != mediaList && mediaList.size() > 0){
+                    if (position == mediaList.size()-1){
+                        position = 0;
+                    }else{
+                        position++;
+                    }
+                    MediaItem mediaItem = mediaList.get(position);
+                    video_player_vv.setVideoPath(mediaItem.getData());
+                    vpControllerVideoName.setText(mediaItem.getDisplayName());
+                }
             break;
             case  R.id.vp_controller_video_fullScreen:
             break;
@@ -217,6 +228,10 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             //播放器响应第三方调用的时
             video_player_vv.setVideoURI(uri);
             video_player_vv.setVideoPath(uri.toString());
+            vpControllerVideoPre.setEnabled(false);
+            vpControllerVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+            vpControllerVideoNext.setEnabled(false);
+            vpControllerVideoPre.setBackgroundResource(R.drawable.btn_next_gray);
         } else {
             Toast.makeText(this, "哎吆！无数据...", Toast.LENGTH_SHORT).show();
         }
