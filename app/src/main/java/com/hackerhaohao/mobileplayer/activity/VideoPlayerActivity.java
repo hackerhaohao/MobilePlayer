@@ -10,12 +10,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +40,8 @@ import java.util.Date;
 public class VideoPlayerActivity extends Activity implements View.OnClickListener {
 
     private VideoView video_player_vv;
+    //播放器控制面板，实际上是一个相对布局
+    private RelativeLayout video_player_controller;
 
     private LinearLayout vpControllerTop;
     private LinearLayout vpControllerTopStatus;
@@ -76,14 +80,25 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     private Uri uri;
 
     /**
+     * 手势识别
+     */
+    private GestureDetector gestureDetector;
+    /**
+     * 是否显示控制面板
+     */
+    private boolean isShowPlayerController = false;
+
+    /**
      * Find the Views in the layout<br />
      * <br />
      * Auto-created on 2017-03-05 00:18:09 by Android Layout Finder
      * (http://www.buzzingandroid.com/tools/android-layout-finder)
      */
     private void findViews() {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_video_player);
         video_player_vv = (VideoView) findViewById(R.id.video_player_vv);
+        video_player_controller = (RelativeLayout) findViewById(R.id.video_player_controller);
         vpControllerTop = (LinearLayout)findViewById( R.id.vp_controller_top );
         vpControllerTopStatus = (LinearLayout)findViewById( R.id.vp_controller_top_status );
         vpControllerVideoName = (TextView)findViewById( R.id.vp_controller_video_name );
@@ -123,44 +138,124 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
                 finish();
             break;
             case  R.id.vp_controller_video_pre:
-                if (null != mediaList && mediaList.size() > 0){
-                    if (position > 0){
-                        position--;
-                    }else{
-                        position = mediaList.size()-1;
-                    }
-                    MediaItem mediaItem = mediaList.get(position);
-                    video_player_vv.setVideoPath(mediaItem.getData());
-                    vpControllerVideoName.setText(mediaItem.getDisplayName());
-                }
-            break;
+                playPreVideo();
+                break;
             //播放按钮被点击
             case  R.id.vp_controller_video_play_pause:
-            //1、如果在播放状态就暂停，设置图片可播放，2、如果暂停状态就播放，设置图片可暂停
-                if (video_player_vv.isPlaying()){
-                    video_player_vv.pause();
-                    vpControllerVideoPlayPause.setBackgroundResource(R.drawable.vp_controller_video_play_start_selector);
-                }else {
-                    video_player_vv.start();
-                    vpControllerVideoPlayPause.setBackgroundResource(R.drawable.vp_controller_video_play_pause_selector);
-                }
+                videoPlayAndPause();
                 break;
             case  R.id.vp_controller_video_next:
-                if (null != mediaList && mediaList.size() > 0){
-                    if (position == mediaList.size()-1){
-                        position = 0;
-                    }else{
-                        position++;
-                    }
-                    MediaItem mediaItem = mediaList.get(position);
-                    video_player_vv.setVideoPath(mediaItem.getData());
-                    vpControllerVideoName.setText(mediaItem.getDisplayName());
-                }
-            break;
+                playNextVideo();
+                break;
             case  R.id.vp_controller_video_fullScreen:
             break;
             default:
             break;
+        }
+    }
+
+    /**
+     * 播放下一个视频
+     */
+    private void playNextVideo() {
+        if (null != mediaList && mediaList.size() > 0){
+            position++;
+            if (position < mediaList.size()){
+                MediaItem mediaItem = mediaList.get(position);
+                video_player_vv.setVideoPath(mediaItem.getData());
+                vpControllerVideoName.setText(mediaItem.getDisplayName());
+                //设置按钮状态
+                setButtonStatue();
+            }
+        }
+    }
+
+    /**
+     * 播放上一个视频
+     * ps:没有判断外部调用时候设置按钮状态，等测试时候再说
+     */
+    private void playPreVideo() {
+        if (null != mediaList && mediaList.size() > 0){
+            position--;
+            if (position >= 0){
+                MediaItem mediaItem = mediaList.get(position);
+                video_player_vv.setVideoPath(mediaItem.getData());
+                vpControllerVideoName.setText(mediaItem.getDisplayName());
+                //设置按钮状态
+                setButtonStatue();
+            }
+        }
+    }
+
+    /**
+     * 设置上一个下一个按钮的状态 使用地方有三个初始化数据、点击上一个按钮、点击下一个按钮
+     * 需要测试的当只有两个视频的时候按钮状态是否正确
+     else if (mediaList.size() == 2){
+     //当列表只有两个视频时候，播放第一个视频上一个按钮失效下一个按钮生效，当播放第二个视频时候上一个按钮生效下一个按钮失效
+     if (position == 0){
+     vpControllerVideoPre.setEnabled(false);
+     vpControllerVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+
+     vpControllerVideoNext.setEnabled(true);
+     vpControllerVideoNext.setBackgroundResource(R.drawable.vp_controller_video_next_selector);
+     }else{
+     vpControllerVideoNext.setEnabled(false);
+     vpControllerVideoNext.setBackgroundResource(R.drawable.btn_next_gray);
+
+     vpControllerVideoPre.setEnabled(true);
+     vpControllerVideoPre.setBackgroundResource(R.drawable.vp_controller_video_pre_selector);
+     }
+     }
+     */
+    private void setButtonStatue() {
+        if (null != mediaList && mediaList.size() > 0){
+            if (mediaList.size() == 1){
+                //当列表只有一个视频时候上一个和下一个按钮都不可用
+                vpControllerVideoPre.setEnabled(false);
+                vpControllerVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+                vpControllerVideoNext.setEnabled(false);
+                vpControllerVideoNext.setBackgroundResource(R.drawable.btn_next_gray);
+            } else {
+                //当列表三个及其以上视频的时候，播放第一个视频上一个按钮失效下一个按钮生效，当播放最后一个视频时候上一个按钮生效下一个按钮失效其余全部有效
+                if (position == 0){
+                    vpControllerVideoPre.setEnabled(false);
+                    vpControllerVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+
+                    vpControllerVideoNext.setEnabled(true);
+                    vpControllerVideoNext.setBackgroundResource(R.drawable.vp_controller_video_next_selector);
+                }else if (position == mediaList.size()-1){
+                    vpControllerVideoNext.setEnabled(false);
+                    vpControllerVideoNext.setBackgroundResource(R.drawable.btn_next_gray);
+
+                    vpControllerVideoPre.setEnabled(true);
+                    vpControllerVideoPre.setBackgroundResource(R.drawable.vp_controller_video_pre_selector);
+                } else {
+                    vpControllerVideoPre.setEnabled(true);
+                    vpControllerVideoPre.setBackgroundResource(R.drawable.vp_controller_video_pre_selector);
+                    vpControllerVideoNext.setEnabled(true);
+                    vpControllerVideoNext.setBackgroundResource(R.drawable.vp_controller_video_next_selector);
+                }
+            }
+        }else if (null != uri){
+            //当列表只有一个视频时候上一个和下一个按钮都不可用
+            vpControllerVideoPre.setEnabled(false);
+            vpControllerVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
+            vpControllerVideoNext.setEnabled(false);
+            vpControllerVideoNext.setBackgroundResource(R.drawable.btn_next_gray);
+        }
+    }
+
+    /**
+     * 视频播放和暂停
+     */
+    private void videoPlayAndPause() {
+        //1、如果在播放状态就暂停，设置图片可播放，2、如果暂停状态就播放，设置图片可暂停
+        if (video_player_vv.isPlaying()){
+            video_player_vv.pause();
+            vpControllerVideoPlayPause.setBackgroundResource(R.drawable.vp_controller_video_play_start_selector);
+        }else {
+            video_player_vv.start();
+            vpControllerVideoPlayPause.setBackgroundResource(R.drawable.vp_controller_video_play_pause_selector);
         }
     }
 
@@ -184,6 +279,10 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         }
     };
 
+    /**
+     * 获取系统时间
+     * @return
+     */
     private String getSystemTime() {
         SimpleDateFormat s = new SimpleDateFormat("HH:mm:ss");
         return s.format(new Date());
@@ -192,14 +291,62 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
         //初始化页面控件
         findViews();
+        //获取播放数据
+        getData();
+        //设置数据
         setData();
+        //设置监听器
         setListener();
         //设置Android系统提供的播放控制bar
         //video_player_vv.setMediaController(new MediaController(this));
         setBroadCastReceive();
+        gesTureDetector();
+
+    }
+
+    //设置手势识别处理方法
+    private void gesTureDetector() {
+        //手势识别处理
+        gestureDetector = new GestureDetector(this,new GestureDetector.SimpleOnGestureListener(){
+            /**
+             * 长按,控制播放和暂停
+             * @param e
+             */
+            @Override
+            public void onLongPress(MotionEvent e) {
+                videoPlayAndPause();
+                super.onLongPress(e);
+            }
+
+            /**
+             * 发生确定的单击时执行，控制播放面板
+             * @param e
+             * @return
+             */
+            @Override
+            public boolean onSingleTapConfirmed(MotionEvent e) {
+                if (isShowPlayerController){
+                    //显示状态（TRUE）下要隐藏控制面板
+                    hidePlayerController();
+                } else {
+                    //隐藏状态（FALSE）下要显示控制面板
+                    showPlayerController();
+                }
+                return super.onSingleTapConfirmed(e);
+            }
+
+            /**
+             * 双击 全屏显示
+             * @param e
+             * @return
+             */
+            @Override
+            public boolean onDoubleTap(MotionEvent e) {
+                return super.onDoubleTap(e);
+            }
+        });
     }
 
     /**
@@ -217,10 +364,6 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
      * 设置播放数据
      */
     private void setData() {
-        //得到播放地址
-        uri = getIntent().getData();
-        mediaList = (ArrayList<MediaItem>) getIntent().getSerializableExtra("mediaList");
-        position = getIntent().getIntExtra("position",0);
         if (null != mediaList && mediaList.size() > 0){
             MediaItem mediaItem = mediaList.get(position);
             vpControllerVideoName.setText(mediaItem.getDisplayName());
@@ -229,15 +372,26 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             //播放器响应第三方调用的时
             video_player_vv.setVideoURI(uri);
             video_player_vv.setVideoPath(uri.toString());
-            vpControllerVideoPre.setEnabled(false);
-            vpControllerVideoPre.setBackgroundResource(R.drawable.btn_pre_gray);
-            vpControllerVideoNext.setEnabled(false);
-            vpControllerVideoPre.setBackgroundResource(R.drawable.btn_next_gray);
         } else {
             Toast.makeText(this, "哎吆！无数据...", Toast.LENGTH_SHORT).show();
         }
+        //初始化进来时候设置按钮状态
+        setButtonStatue();
     }
 
+    /**
+     * 拿到从Activity传递过来的数据
+     */
+    private void getData() {
+        //得到播放地址
+        uri = getIntent().getData();
+        mediaList = (ArrayList<MediaItem>) getIntent().getSerializableExtra("mediaList");
+        position = getIntent().getIntExtra("position",0);
+    }
+
+    /**
+     * 监听电量变化设置电量图片的广播
+     */
     private class MyBatteryReceive extends BroadcastReceiver{
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -324,6 +478,8 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             vpControllerVideoDuration.setText(new Utils().stringForTime(video_player_vv.getDuration()));
             //设置视频的总长度为video_seekBar的多少等分
             vpControllerVideoSeekBar.setMax(video_player_vv.getDuration());
+            //默认不显示控制面板
+            hidePlayerController();
             //发送消息更新UI
             handler.sendEmptyMessage(PROGRESS);
         }
@@ -337,7 +493,8 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
          */
         @Override
         public void onCompletion(MediaPlayer mp) {
-
+            //当一个视频播放完毕之后自动播放下一个视频
+            playNextVideo();
         }
     }
 
@@ -360,6 +517,23 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        //调用gestureDetector的onTouchEvent方法设置的手势回调方法才回被调用
+        gestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
+    }
+
+    /**
+     * 隐藏控制面板 显示状态（TRUE）下要隐藏控制面板
+     */
+    private void hidePlayerController() {
+        video_player_controller.setVisibility(View.GONE);
+        isShowPlayerController = false;
+    }
+    /**
+     * 显示控制面板 隐藏状态（FALSE）下要显示控制面板
+     */
+    private void showPlayerController() {
+        video_player_controller.setVisibility(View.VISIBLE);
+        isShowPlayerController = true;
     }
 }
