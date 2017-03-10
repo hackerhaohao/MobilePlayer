@@ -38,11 +38,17 @@ import java.util.Date;
  * 控制视频播放的Activity
  */
 public class VideoPlayerActivity extends Activity implements View.OnClickListener {
-
+    /**
+     * 播放视频seekBar
+     */
+    private static final int PROGRESS = 0;
+    /**
+     * 隐藏播放控制面板
+     */
+    private static final int HIDE_PLAYERCONTROLLER = 2;
     private VideoView video_player_vv;
     //播放器控制面板，实际上是一个相对布局
     private RelativeLayout video_player_controller;
-
     private LinearLayout vpControllerTop;
     private LinearLayout vpControllerTopStatus;
     private TextView vpControllerVideoName;
@@ -65,7 +71,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
 
     private MyBatteryReceive myBatteryReceive;
 
-    private static final int PROGRESS = 0;
+
     /**
      * 传递的播放列表
      */
@@ -152,6 +158,9 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             default:
             break;
         }
+        //只要有按钮按下去就取消控制面板隐藏指令
+        handler.removeMessages(HIDE_PLAYERCONTROLLER);
+        handler.sendEmptyMessageDelayed(HIDE_PLAYERCONTROLLER,3000);
     }
 
     /**
@@ -275,6 +284,9 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
                     handler.removeMessages(PROGRESS);
                     handler.sendEmptyMessageDelayed(PROGRESS,1000);
                     break;
+                case HIDE_PLAYERCONTROLLER:
+                    hidePlayerController();
+                    break;
             }
         }
     };
@@ -328,11 +340,13 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             @Override
             public boolean onSingleTapConfirmed(MotionEvent e) {
                 if (isShowPlayerController){
-                    //显示状态（TRUE）下要隐藏控制面板
+                    //显示状态（TRUE）下要隐藏控制面板，隐藏面板后移除handler消息
                     hidePlayerController();
+                    handler.removeMessages(HIDE_PLAYERCONTROLLER);
                 } else {
-                    //隐藏状态（FALSE）下要显示控制面板
+                    //隐藏状态（FALSE）下要显示控制面板,同时发消息间隔三秒隐藏控制面板
                     showPlayerController();
+                    handler.sendEmptyMessageDelayed(HIDE_PLAYERCONTROLLER,3000);
                 }
                 return super.onSingleTapConfirmed(e);
             }
@@ -455,12 +469,12 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         //当开始滑动seekbar时候回调该方法
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-
+            handler.removeMessages(HIDE_PLAYERCONTROLLER);
         }
         //当结束滑动seekabr时候回调该方法
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-
+            handler.sendEmptyMessageDelayed(HIDE_PLAYERCONTROLLER,3000);
         }
     }
 
@@ -517,7 +531,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        //调用gestureDetector的onTouchEvent方法设置的手势回调方法才回被调用
+        //调用gestureDetector的onTouchEvent方法设置的手势回调方法才回被调用，若不传递手势识别器不生效
         gestureDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
     }
