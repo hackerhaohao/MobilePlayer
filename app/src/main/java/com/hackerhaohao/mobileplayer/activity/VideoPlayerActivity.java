@@ -5,15 +5,18 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,12 +24,12 @@ import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
 import com.hackerhaohao.mobileplayer.R;
 import com.hackerhaohao.mobileplayer.po.MediaItem;
 import com.hackerhaohao.mobileplayer.utils.LogUtil;
 import com.hackerhaohao.mobileplayer.utils.Utils;
+import com.hackerhaohao.mobileplayer.view.VideoView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,6 +49,14 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
      * 隐藏播放控制面板
      */
     private static final int HIDE_PLAYERCONTROLLER = 2;
+    /**
+     * 全屏显示
+     */
+    private static final int FULL_SCREEN = 1;
+    /**
+     * 默认屏幕显示
+     */
+    private static final int DEFAULT_SCREEN = 2;
     private VideoView video_player_vv;
     //播放器控制面板，实际上是一个相对布局
     private RelativeLayout video_player_controller;
@@ -93,6 +104,26 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
      * 是否显示控制面板
      */
     private boolean isShowPlayerController = false;
+    /**
+     * 当前设备的屏幕宽度
+     */
+    private int screenWidth = 0;
+    /**
+     * 当前设备的屏幕高度
+     */
+    private int screenHeight = 0;
+    /**
+     * 是否全屏显示
+     */
+    private boolean isFullScreen = false;
+    /**
+     * 视频的真实宽度
+     */
+    private int videoWith = 0;
+    /**
+     * 视频的真实高度
+     */
+    private int videoHeight = 0;
 
     /**
      * Find the Views in the layout<br />
@@ -154,6 +185,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
                 playNextVideo();
                 break;
             case  R.id.vp_controller_video_fullScreen:
+                setVideoFullScreenAndDefault();
             break;
             default:
             break;
@@ -309,13 +341,28 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         getData();
         //设置数据
         setData();
-        //设置监听器
-        setListener();
         //设置Android系统提供的播放控制bar
         //video_player_vv.setMediaController(new MediaController(this));
         setBroadCastReceive();
         gesTureDetector();
+        getScreenWidthAndHeight();
+        //获得系统声音控制
+        AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
+        //设置监听器
+        setListener();
+        //设置屏幕长亮不锁屏幕
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
 
+    /**
+     * 获得当前设备的屏幕尺寸
+     */
+    private void getScreenWidthAndHeight() {
+        //获取屏幕的尺寸
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
     }
 
     //设置手势识别处理方法
@@ -358,9 +405,55 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
              */
             @Override
             public boolean onDoubleTap(MotionEvent e) {
+                setVideoFullScreenAndDefault();
                 return super.onDoubleTap(e);
             }
         });
+    }
+
+    /**
+     * 设置全屏还是默认播放
+     */
+    private void setVideoFullScreenAndDefault() {
+        if(isFullScreen){
+            //默认
+            setVideoType(DEFAULT_SCREEN);
+        }else {
+            //全屏
+            setVideoType(FULL_SCREEN);
+        }
+    }
+
+    /**
+     * 设置额视频大小
+     * @param defaultScreen
+     */
+    private void setVideoType(int defaultScreen) {
+        switch (defaultScreen){
+            case FULL_SCREEN:
+                //1 根据屏幕大小设置视频大小 2 设置控制面板的按钮式样 3 设置标志位
+                video_player_vv.setVideoSize(screenWidth,screenHeight);
+                vpControllerVideoFullScreen.setBackgroundResource(R.drawable.vp_controller_video_default_screen_selector);
+                isFullScreen = true;
+                break;
+            case DEFAULT_SCREEN:
+                //1 根据屏幕大小设置视频大小 2 设置控制面板的按钮式样 3 设置标志位
+                //屏幕大小
+                int width = screenWidth;
+                int height = screenHeight;
+                int mVideoWidth = videoWith;
+                int mVideoHeight = videoHeight;
+                //等比例拉大算法
+                if ( mVideoWidth * height  < width * mVideoHeight ) {
+                    width = height * mVideoWidth / mVideoHeight;
+                } else if ( mVideoWidth * height  > width * mVideoHeight ) {
+                    height = width * mVideoHeight / mVideoWidth;
+                }
+                video_player_vv.setVideoSize(width,height);
+                vpControllerVideoFullScreen.setBackgroundResource(R.drawable.vp_controller_video_full_screen_selector);
+                isFullScreen = false;
+                break;
+        }
     }
 
     /**
@@ -486,6 +579,10 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
          */
         @Override
         public void onPrepared(MediaPlayer mp) {
+            //视频的真实宽高 mp.getVideoWidth(), mp.getVideoHeight()
+            //video_player_vv.setVideoSize(mp.getVideoWidth(), mp.getVideoHeight());
+            videoWith = mp.getVideoWidth();
+            videoHeight = mp.getVideoHeight();
             //准备完毕开始播放
             video_player_vv.start();
             //设置视频总时长
@@ -496,6 +593,8 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             hidePlayerController();
             //发送消息更新UI
             handler.sendEmptyMessage(PROGRESS);
+            //默认设置不全屏播放
+            setVideoType(DEFAULT_SCREEN);
         }
     }
 
