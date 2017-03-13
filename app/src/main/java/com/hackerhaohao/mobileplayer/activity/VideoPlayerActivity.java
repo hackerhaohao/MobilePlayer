@@ -124,6 +124,14 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
      * 视频的真实高度
      */
     private int videoHeight = 0;
+    /**
+     * 当前音量
+     */
+    private int currentVoice;
+    /**
+     * 最大音量
+     */
+    private int maxVoice;
 
     /**
      * Find the Views in the layout<br />
@@ -348,6 +356,11 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         getScreenWidthAndHeight();
         //获得系统声音控制
         AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
+        //获取当前音量，获取系统所能设置对打音量0~15
+        currentVoice = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+        maxVoice = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        vpControllerVoiceSeekBar.setProgress(currentVoice);
+        vpControllerVoiceSeekBar.setMax(maxVoice);
         //设置监听器
         setListener();
         //设置屏幕长亮不锁屏幕
@@ -425,7 +438,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     }
 
     /**
-     * 设置额视频大小
+     * 设置播放屏幕大小
      * @param defaultScreen
      */
     private void setVideoType(int defaultScreen) {
@@ -545,6 +558,26 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         vpControllerVideoFullScreen.setOnClickListener(this);
         //视频进度条的监听
         vpControllerVideoSeekBar.setOnSeekBarChangeListener(new VideoOnSeekBarChangeListener());
+        //声音进度条的监听
+        vpControllerVoiceSeekBar.setOnSeekBarChangeListener(new VoiceOnSeekBarChangeListener());
+    }
+
+    private class VoiceOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
+        }
     }
 
     private class VideoOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
