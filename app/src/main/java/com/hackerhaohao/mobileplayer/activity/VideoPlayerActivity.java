@@ -132,6 +132,14 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
      * 最大音量
      */
     private int maxVoice;
+    /**
+     * 声音管理器
+     */
+    private AudioManager am;
+    /**
+     * 是否静音标志位
+     */
+    private boolean flag = false;
 
     /**
      * Find the Views in the layout<br />
@@ -176,6 +184,8 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     public void onClick(View v) {
         switch (v.getId()){
             case  R.id.vp_controller_video_voice:
+                flag = !flag;
+                updateVoice(currentVoice,flag);
             break;
             case  R.id.vp_controller_video_switch:
             break;
@@ -355,16 +365,23 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         gesTureDetector();
         getScreenWidthAndHeight();
         //获得系统声音控制
-        AudioManager am = (AudioManager) getSystemService(AUDIO_SERVICE);
-        //获取当前音量，获取系统所能设置对打音量0~15
-        currentVoice = am.getStreamVolume(AudioManager.STREAM_MUSIC);
-        maxVoice = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
-        vpControllerVoiceSeekBar.setProgress(currentVoice);
-        vpControllerVoiceSeekBar.setMax(maxVoice);
+        getSystemVoice();
         //设置监听器
         setListener();
         //设置屏幕长亮不锁屏幕
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON,WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+    }
+
+    /**
+     * 获得系统声音控制并设置seekBar
+     */
+    private void getSystemVoice() {
+        //获取当前音量，获取系统所能设置对打音量0~15
+        am = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+        currentVoice = am.getStreamVolume(AudioManager.STREAM_MUSIC);
+        maxVoice = am.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+        vpControllerVoiceSeekBar.setProgress(currentVoice);
+        vpControllerVoiceSeekBar.setMax(maxVoice);
     }
 
     /**
@@ -549,7 +566,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
         video_player_vv.setOnCompletionListener(new MyOnCompletionListener());
         //设置播放出错监听
         video_player_vv.setOnErrorListener(new MyOnErrorListener());
-        vpControllerVideoVoice.setOnClickListener( this );
+        vpControllerVideoVoice.setOnClickListener(this);
         vpControllerVideoSwitch.setOnClickListener( this );
         vpControllerVideoExit.setOnClickListener( this );
         vpControllerVideoPre.setOnClickListener(this);
@@ -566,18 +583,45 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+            if (fromUser){
+                if (progress >0){
+                    //非静音状态
+                    flag = false;
+                }else {
+                    flag = true;
+                }
+                updateVoice(progress,flag);
+            }
 
         }
 
         @Override
         public void onStartTrackingTouch(SeekBar seekBar) {
-
+            handler.removeMessages(HIDE_PLAYERCONTROLLER);
         }
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
-
+            handler.sendEmptyMessageDelayed(HIDE_PLAYERCONTROLLER,3000);
         }
+    }
+
+    /**
+     * 更新音量
+     * @param progress
+     */
+    private void updateVoice(int progress,boolean flag) {
+        /**
+         * setStreamVolume 最后一个参数是1的时候会调用系统的改变音量的seekBar 如果设置是0则不会调用
+         */
+        if (flag) {
+            am.setStreamVolume(AudioManager.STREAM_MUSIC,0,0);
+            vpControllerVoiceSeekBar.setProgress(0);
+        } else {
+            am.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+            vpControllerVoiceSeekBar.setProgress(progress);
+        }
+        currentVoice = progress;
     }
 
     private class VideoOnSeekBarChangeListener implements SeekBar.OnSeekBarChangeListener {
@@ -665,6 +709,17 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     public boolean onTouchEvent(MotionEvent event) {
         //调用gestureDetector的onTouchEvent方法设置的手势回调方法才回被调用，若不传递手势识别器不生效
         gestureDetector.onTouchEvent(event);
+        switch (event.getAction()){
+            //手指按下
+            case MotionEvent.ACTION_DOWN:
+                break;
+            //手指移动
+            case MotionEvent.ACTION_MOVE:
+                break;
+            //手指抬起
+            case MotionEvent.ACTION_UP:
+                break;
+        }
         return super.onTouchEvent(event);
     }
 
