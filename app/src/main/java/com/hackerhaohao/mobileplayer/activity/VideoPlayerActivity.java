@@ -13,6 +13,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.view.GestureDetector;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -736,5 +737,31 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
     private void showPlayerController() {
         video_player_controller.setVisibility(View.VISIBLE);
         isShowPlayerController = true;
+    }
+
+    /**
+     * 监听手机物理按键改变音量
+     * @param keyCode
+     * @param event
+     * @return
+     */
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            currentVoice--;
+            updateVoice(currentVoice,false);
+            showPlayerController();
+            handler.removeMessages(HIDE_PLAYERCONTROLLER);
+            handler.sendEmptyMessageDelayed(HIDE_PLAYERCONTROLLER,3000);
+            return true;
+        } else if (keyCode == KeyEvent.KEYCODE_VOLUME_UP){
+            currentVoice++;
+            updateVoice(currentVoice,false);
+            showPlayerController();
+            handler.removeMessages(HIDE_PLAYERCONTROLLER);
+            handler.sendEmptyMessageDelayed(HIDE_PLAYERCONTROLLER,3000);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
