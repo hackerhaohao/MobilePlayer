@@ -536,6 +536,7 @@ public class VideoPlayerActivity extends Activity implements View.OnClickListene
             //电量的值0-100
             int level = intent.getIntExtra("level",0);
             LogUtil.e(level+"电量值");
+            //主线程中所以直接设置UI
             setBatteryPicture(level);
         }
 
